@@ -1,0 +1,28 @@
+name: Publish packages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'feed/**.nupkg'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Push new/changed packages to GitHub Packages
+        run: |
+          dotnet nuget push "feed/*.nupkg" \
+            --source "https://nuget.pkg.github.com/Ter-jeff/index.json" \
+            --api-key "${{ secrets.GITHUB_TOKEN }}" \
+            --skip-duplicate
