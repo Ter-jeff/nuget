@@ -1,9 +1,0 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<ItemGroup>
-		<Reference Include="Microsoft.Office.Interop.PowerPoint">
-			<HintPath>$(MSBuildThisFileDirectory)..\interop\net48\Microsoft.Office.Interop.PowerPoint.dll</HintPath>
-			<Private>true</Private>
-			<EmbedInteropTypes>true</EmbedInteropTypes>
-		</Reference>
-	</ItemGroup>
-</Project>
