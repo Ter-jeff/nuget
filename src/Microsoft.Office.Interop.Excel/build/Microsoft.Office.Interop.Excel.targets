@@ -1,0 +1,9 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Reference Include="Microsoft.Office.Interop.Excel">
+			<HintPath>$(MSBuildThisFileDirectory)..\interop\net48\Microsoft.Office.Interop.Excel.dll</HintPath>
+			<Private>true</Private>
+			<EmbedInteropTypes>true</EmbedInteropTypes>
+		</Reference>
+	</ItemGroup>
+</Project>

@@ -1,0 +1,9 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Reference Include="Microsoft.Vbe.Interop">
+			<HintPath>$(MSBuildThisFileDirectory)..\interop\net48\Microsoft.Vbe.Interop.dll</HintPath>
+			<Private>true</Private>
+			<EmbedInteropTypes>true</EmbedInteropTypes>
+		</Reference>
+	</ItemGroup>
+</Project>

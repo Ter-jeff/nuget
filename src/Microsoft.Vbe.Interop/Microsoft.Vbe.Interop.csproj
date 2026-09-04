@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<PackageId>Microsoft.Vbe.Interop</PackageId>
+		<Version>15.0.0</Version>
+		<Description>Embeddable-interop repackage of the VBE primary interop assembly for consumption via PackageReference.</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\vendor\interop\Microsoft.Vbe.Interop.dll" Pack="true" PackagePath="interop\net48\" />
+		<None Include="build\Microsoft.Vbe.Interop.targets" Pack="true" PackagePath="build\" />
+	</ItemGroup>
+
+</Project>

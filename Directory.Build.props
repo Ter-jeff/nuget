@@ -1,0 +1,13 @@
+<Project>
+
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<NoWarn>NU5128;NU5100</NoWarn>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<Authors>Teradyne</Authors>
+		<RepositoryUrl>https://github.teradyne.com/jeff-li/nuget</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+	</PropertyGroup>
+
+</Project>
