@@ -18,12 +18,25 @@ packages installed in CI — has to be republished here first.
 2. Commit it under [`feed/`](feed) and push to `main`.
 3. That's it — [`.github/workflows/publish-packages.yml`](.github/workflows/publish-packages.yml)
    picks up any changed `feed/**.nupkg` file and pushes it to our GitHub
-   Packages feed automatically, using the workflow's own `GITHUB_TOKEN`
-   (no PAT needed, nothing to run locally). Already-published id+version
-   pairs are skipped safely (`--skip-duplicate`).
+   Packages feed automatically. Already-published id+version pairs are
+   skipped safely (`--skip-duplicate`).
 
 `.nupkg` files under `feed/` are committed on purpose — this repo *is* the
 audit trail of what's been mirrored and when.
+
+### One-time setup: `GH_PACKAGES_PAT` secret
+
+The workflow authenticates with a **real PAT**, not the built-in
+`GITHUB_TOKEN` — GitHub rejects `GITHUB_TOKEN` pushes for packages whose
+nuspec `<repository>` metadata points somewhere other than this repo (which
+is every package we mirror, since we're republishing other projects'
+`.nupkg` files as-is). Create a repository secret:
+
+**Settings → Secrets and variables → Actions → New repository secret**
+- Name: `GH_PACKAGES_PAT`
+- Value: a PAT with `write:packages` scope
+
+Only needs to be done once; rotate the PAT there whenever it expires.
 
 ## Note on build tools
 

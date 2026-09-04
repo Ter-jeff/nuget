@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
   publish:
@@ -24,5 +23,5 @@ jobs:
         run: |
           dotnet nuget push "feed/*.nupkg" \
             --source "https://nuget.pkg.github.com/Ter-jeff/index.json" \
-            --api-key "${{ secrets.GITHUB_TOKEN }}" \
+            --api-key "${{ secrets.GH_PACKAGES_PAT }}" \
             --skip-duplicate
