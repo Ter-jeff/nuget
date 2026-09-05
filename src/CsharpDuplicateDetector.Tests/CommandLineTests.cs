@@ -14,8 +14,8 @@ public class CommandLineTests
     [TestInitialize]
     public void TestInitialize()
     {
-        _outputDirectory = Path.Combine(Directory.GetCurrentDirectory());
-        _expectedDirectory = Path.Combine(Directory.GetCurrentDirectory(),"Expected");
+        _outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Output");
+        _expectedDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Expected");
     }
 
     [TestCleanup]

@@ -15,7 +15,7 @@ public class CommandLineTests
     [TestInitialize]
     public void TestInitialize()
     {
-        _outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "SltCsharpMetricsTests");
+        _outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Output");
         _outputPath = Path.Combine(_outputDirectory, "metrics.xml");
         _expectedDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Expected");
         Directory.CreateDirectory(_outputDirectory);
