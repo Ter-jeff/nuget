@@ -75,7 +75,8 @@ public static class Program
         var allBlocks = new List<CodeBlock>();
         foreach (var file in FindCsFiles(solutionDirectory, excluded))
         {
-            allBlocks.AddRange(BlockExtractor.ExtractBlocks(file, blockSplit, onlyIdentifiers));
+            var displayPath = Path.GetRelativePath(solutionDirectory, file);
+            allBlocks.AddRange(BlockExtractor.ExtractBlocks(file, displayPath, blockSplit, onlyIdentifiers));
         }
 
         var qualifying = allBlocks.Where(b => b.Tokens.Count >= minTokens).ToList();
@@ -103,8 +104,8 @@ public static class Program
 
                 duplicates.Add(new DuplicatePair(
                     i, j,
-                    a.File, a.ClassName, a.MethodName, a.Line,
-                    b.File, b.ClassName, b.MethodName, b.Line,
+                    a.File, a.ClassName, a.MethodName, a.Line, a.Tokens.Count,
+                    b.File, b.ClassName, b.MethodName, b.Line, b.Tokens.Count,
                     jaccard, keyJaccard));
             }
         }
@@ -149,7 +150,10 @@ public static class Program
         Directory.CreateDirectory(outputDirectory);
         var csvPath = Path.Combine(outputDirectory, "duplicates.csv");
         var jsonPath = Path.Combine(outputDirectory, "duplicates.json");
-        WriteCsv(csvPath, duplicates);
+        var sortedForCsv = duplicates
+            .OrderBy(d => d.File1, StringComparer.Ordinal)
+            .ThenBy(d => d.Method1, StringComparer.Ordinal);
+        WriteCsv(csvPath, sortedForCsv);
         WriteJson(jsonPath, duplicates);
 
         Console.WriteLine($"Results saved to {csvPath} and {jsonPath}");
@@ -171,7 +175,7 @@ public static class Program
         }
     }
 
-    private static void WriteCsv(string path, List<DuplicatePair> duplicates)
+    private static void WriteCsv(string path, IEnumerable<DuplicatePair> duplicates)
     {
         using var writer = new StreamWriter(path, append: false);
         writer.WriteLine("File1,Class1,Method1,LineNumber1,File2,Class2,Method2,LineNumber2,JaccardSimilarity,KeyJaccardSimilarity");
@@ -195,20 +199,26 @@ public static class Program
 
     private static void WriteJson(string path, List<DuplicatePair> duplicates)
     {
-        var payload = duplicates.Select(d => new
+        var payload = duplicates.Select(d => new[]
         {
-            File1 = d.File1,
-            Class1 = d.Class1,
-            Method1 = d.Method1,
-            LineNumber1 = d.LineNumber1,
-            File2 = d.File2,
-            Class2 = d.Class2,
-            Method2 = d.Method2,
-            LineNumber2 = d.LineNumber2,
-            JaccardSimilarity = d.JaccardSimilarity,
-            KeyJaccardSimilarity = d.KeyJaccardSimilarity,
+            new
+            {
+                FileName = d.File1,
+                ClassName = d.Class1,
+                MethodName = d.Method1,
+                LineNumber = d.LineNumber1,
+                NumTokens = d.NumTokens1,
+            },
+            new
+            {
+                FileName = d.File2,
+                ClassName = d.Class2,
+                MethodName = d.Method2,
+                LineNumber = d.LineNumber2,
+                NumTokens = d.NumTokens2,
+            },
         });
 
-        File.WriteAllText(path, JsonSerializer.Serialize(payload));
+        File.WriteAllText(path, JsonSerializer.Serialize(payload, new JsonSerializerOptions { WriteIndented = true }));
     }
 }

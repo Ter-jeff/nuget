@@ -6,7 +6,7 @@ namespace CsharpDuplicateDetector;
 
 public static class BlockExtractor
 {
-    public static IEnumerable<CodeBlock> ExtractBlocks(string filePath, string blockSplit, bool onlyIdentifiers)
+    public static IEnumerable<CodeBlock> ExtractBlocks(string filePath, string displayPath, string blockSplit, bool onlyIdentifiers)
     {
         var text = File.ReadAllText(filePath);
         var tree = CSharpSyntaxTree.ParseText(text, path: filePath);
@@ -14,29 +14,29 @@ public static class BlockExtractor
 
         return blockSplit switch
         {
-            "file" => ExtractFileBlock(root, filePath, onlyIdentifiers),
-            "class" => ExtractClassBlocks(root, filePath, onlyIdentifiers),
-            _ => ExtractMethodBlocks(root, filePath, onlyIdentifiers),
+            "file" => ExtractFileBlock(root, displayPath, onlyIdentifiers),
+            "class" => ExtractClassBlocks(root, displayPath, onlyIdentifiers),
+            _ => ExtractMethodBlocks(root, displayPath, onlyIdentifiers),
         };
     }
 
-    private static IEnumerable<CodeBlock> ExtractFileBlock(SyntaxNode root, string filePath, bool onlyIdentifiers)
+    private static IEnumerable<CodeBlock> ExtractFileBlock(SyntaxNode root, string displayPath, bool onlyIdentifiers)
     {
         yield return new CodeBlock
         {
-            File = filePath,
+            File = displayPath,
             Line = 1,
             Tokens = ExtractTokens(root, onlyIdentifiers),
         };
     }
 
-    private static IEnumerable<CodeBlock> ExtractClassBlocks(SyntaxNode root, string filePath, bool onlyIdentifiers)
+    private static IEnumerable<CodeBlock> ExtractClassBlocks(SyntaxNode root, string displayPath, bool onlyIdentifiers)
     {
         foreach (var typeDecl in root.DescendantNodes().OfType<TypeDeclarationSyntax>())
         {
             yield return new CodeBlock
             {
-                File = filePath,
+                File = displayPath,
                 ClassName = typeDecl.Identifier.Text,
                 Line = LineOf(typeDecl.Identifier),
                 Tokens = ExtractTokens(typeDecl, onlyIdentifiers),
@@ -44,7 +44,7 @@ public static class BlockExtractor
         }
     }
 
-    private static IEnumerable<CodeBlock> ExtractMethodBlocks(SyntaxNode root, string filePath, bool onlyIdentifiers)
+    private static IEnumerable<CodeBlock> ExtractMethodBlocks(SyntaxNode root, string displayPath, bool onlyIdentifiers)
     {
         foreach (var methodDecl in root.DescendantNodes().OfType<BaseMethodDeclarationSyntax>())
         {
@@ -56,7 +56,7 @@ public static class BlockExtractor
             var containingType = methodDecl.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
             yield return new CodeBlock
             {
-                File = filePath,
+                File = displayPath,
                 ClassName = containingType?.Identifier.Text,
                 MethodName = DescribeMethod(methodDecl),
                 Line = LineOf(methodDecl.GetFirstToken()),
@@ -65,7 +65,7 @@ public static class BlockExtractor
         }
     }
 
-    private static int LineOf(SyntaxToken token) => token.GetLocation().GetLineSpan().StartLinePosition.Line + 1;
+    private static int LineOf(SyntaxToken token) => token.GetLocation().GetLineSpan().StartLinePosition.Line;
 
     private static List<string> ExtractTokens(SyntaxNode node, bool onlyIdentifiers)
     {
@@ -80,13 +80,10 @@ public static class BlockExtractor
 
     private static string DescribeMethod(BaseMethodDeclarationSyntax methodDecl) => methodDecl switch
     {
-        MethodDeclarationSyntax m =>
-            $"{m.Identifier.Text}({string.Join(", ", m.ParameterList.Parameters.Select(p => p.Type?.ToString()))})",
-        ConstructorDeclarationSyntax c =>
-            $"{c.Identifier.Text}({string.Join(", ", c.ParameterList.Parameters.Select(p => p.Type?.ToString()))})",
-        DestructorDeclarationSyntax d => $"~{d.Identifier.Text}()",
-        OperatorDeclarationSyntax o =>
-            $"operator {o.OperatorToken.Text}({string.Join(", ", o.ParameterList.Parameters.Select(p => p.Type?.ToString()))})",
+        MethodDeclarationSyntax m => m.Identifier.Text,
+        ConstructorDeclarationSyntax c => c.Identifier.Text,
+        DestructorDeclarationSyntax d => $"~{d.Identifier.Text}",
+        OperatorDeclarationSyntax o => o.OperatorToken.Text,
         _ => methodDecl.ToString().Split('\n')[0].Trim(),
     };
 }

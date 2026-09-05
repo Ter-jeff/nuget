@@ -1,5 +1,4 @@
 using System.Xml.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SltCsharpMetrics.Tests;
 

@@ -7,9 +7,11 @@ public sealed record DuplicatePair(
     string? Class1,
     string? Method1,
     int LineNumber1,
+    int NumTokens1,
     string File2,
     string? Class2,
     string? Method2,
     int LineNumber2,
+    int NumTokens2,
     double JaccardSimilarity,
     double KeyJaccardSimilarity);

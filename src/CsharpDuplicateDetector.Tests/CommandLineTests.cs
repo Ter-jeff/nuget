@@ -35,7 +35,7 @@ public class CommandLineTests
 
         var exitCode = Program.Main(new[]
         {
-            "--min-tokens", "10",
+            "--min-tokens", "100",
             solutionDirectory,
             _outputDirectory,
         });
