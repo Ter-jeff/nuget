@@ -82,27 +82,42 @@ public static class MetricsCalculator
         return depth;
     }
 
+    private static readonly HashSet<SpecialType> PrimitiveSpecialTypes = new()
+    {
+        SpecialType.System_Boolean, SpecialType.System_Byte, SpecialType.System_SByte,
+        SpecialType.System_Char, SpecialType.System_Decimal, SpecialType.System_Double,
+        SpecialType.System_Single, SpecialType.System_Int16, SpecialType.System_Int32,
+        SpecialType.System_Int64, SpecialType.System_UInt16, SpecialType.System_UInt32,
+        SpecialType.System_UInt64, SpecialType.System_String, SpecialType.System_Object,
+        SpecialType.System_Void,
+    };
+
     public static HashSet<INamedTypeSymbol> ComputeCoupledTypes(SemanticModel model, SyntaxNode node, INamedTypeSymbol self)
     {
         var coupled = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
         foreach (var identifier in node.DescendantNodesAndSelf().OfType<SimpleNameSyntax>())
         {
             var symbol = model.GetSymbolInfo(identifier).Symbol;
-            var type = symbol switch
+            var (type, isDataMember) = symbol switch
             {
-                INamedTypeSymbol t => t,
-                IMethodSymbol m => m.ContainingType,
-                IFieldSymbol f => f.ContainingType,
-                IPropertySymbol p => p.ContainingType,
-                _ => null,
+                INamedTypeSymbol t => (t, false),
+                IMethodSymbol m => (m.ContainingType, false),
+                IFieldSymbol f => (f.ContainingType, true),
+                IPropertySymbol p => (p.ContainingType, true),
+                _ => (null, false),
             };
 
-            if (type is null || type.SpecialType != SpecialType.None)
+            if (type is null || PrimitiveSpecialTypes.Contains(type.SpecialType))
             {
                 continue;
             }
 
-            if (SymbolEqualityComparer.Default.Equals(type, self))
+            // Using an inherited field/property is using your own state; calling an inherited
+            // method still counts as coupling to the type that defines the behavior.
+            var excluded = isDataMember
+                ? IsSelfOrAncestor(type, self)
+                : SymbolEqualityComparer.Default.Equals(type, self);
+            if (excluded)
             {
                 continue;
             }
@@ -111,6 +126,19 @@ public static class MetricsCalculator
         }
 
         return coupled;
+    }
+
+    private static bool IsSelfOrAncestor(INamedTypeSymbol candidate, INamedTypeSymbol self)
+    {
+        for (var current = self; current is not null; current = current.BaseType)
+        {
+            if (SymbolEqualityComparer.Default.Equals(current, candidate))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static int ComputeMaintainabilityIndex(SyntaxNode node, int cyclomaticComplexity, int executableLines)

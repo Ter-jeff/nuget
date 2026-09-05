@@ -8,6 +8,11 @@ namespace SltCsharpMetrics;
 
 public static class Program
 {
+    private static readonly SymbolDisplayFormat ShortTypeFormat = new(
+        typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly,
+        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+        miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+
     private const string Usage = @"
 Usage: Metrics.exe <arguments>
 
@@ -176,22 +181,33 @@ Display this help message.
                 new XElement("Targets", targets)));
     }
 
+    private static string BuildDisplayName(INamedTypeSymbol symbol)
+    {
+        var names = new List<string>();
+        for (var current = symbol; current is not null; current = current.ContainingType)
+        {
+            names.Insert(0, current.ToDisplayString(ShortTypeFormat));
+        }
+
+        return string.Join(".", names);
+    }
+
     private static async Task<XElement> BuildTargetAsync(Project project)
     {
         var compilation = await project.GetCompilationAsync()
             ?? throw new InvalidOperationException($"Unable to compile project '{project.FilePath}'.");
 
-        var typesByNamespace = new Dictionary<string, List<(INamedTypeSymbol Symbol, TypeDeclarationSyntax Syntax, SemanticModel Model)>>();
+        var typesByNamespace = new Dictionary<string, List<(INamedTypeSymbol Symbol, SyntaxNode Syntax, SemanticModel Model, string DisplayName)>>();
 
         foreach (var tree in compilation.SyntaxTrees)
         {
             var model = compilation.GetSemanticModel(tree);
             var root = await tree.GetRootAsync();
-            foreach (var typeDecl in root.DescendantNodes().OfType<TypeDeclarationSyntax>())
+            foreach (var typeDecl in root.DescendantNodes().OfType<BaseTypeDeclarationSyntax>())
             {
-                if (typeDecl.Ancestors().OfType<TypeDeclarationSyntax>().Any())
+                if (typeDecl is not (TypeDeclarationSyntax or EnumDeclarationSyntax))
                 {
-                    continue; // nested types are out of scope for this reimplementation
+                    continue;
                 }
 
                 if (model.GetDeclaredSymbol(typeDecl) is not INamedTypeSymbol symbol)
@@ -202,10 +218,10 @@ Display this help message.
                 var ns = symbol.ContainingNamespace?.ToDisplayString() ?? string.Empty;
                 if (!typesByNamespace.TryGetValue(ns, out var list))
                 {
-                    typesByNamespace[ns] = list = new List<(INamedTypeSymbol, TypeDeclarationSyntax, SemanticModel)>();
+                    typesByNamespace[ns] = list = new List<(INamedTypeSymbol, SyntaxNode, SemanticModel, string)>();
                 }
 
-                list.Add((symbol, typeDecl, model));
+                list.Add((symbol, typeDecl, model, BuildDisplayName(symbol)));
             }
         }
 
@@ -217,9 +233,11 @@ Display this help message.
             var namespaceAgg = new Aggregate();
             var typeElements = new List<XElement>();
 
-            foreach (var (symbol, syntax, model) in types)
+            foreach (var (symbol, syntax, model, displayName) in types)
             {
-                var typeElement = BuildTypeElement(symbol, syntax, model);
+                var typeElement = syntax is EnumDeclarationSyntax enumSyntax
+                    ? BuildEnumElement(symbol, enumSyntax, model, displayName)
+                    : BuildTypeElement(symbol, (TypeDeclarationSyntax)syntax, model, displayName);
                 typeElements.Add(typeElement);
                 namespaceAgg.Add(ReadMetric(typeElement, "MaintainabilityIndex"), ReadMetric(typeElement, "CyclomaticComplexity"),
                     ReadMetric(typeElement, "ClassCoupling"), ReadMetric(typeElement, "SourceLines"), ReadMetric(typeElement, "ExecutableLines"));
@@ -243,54 +261,101 @@ Display this help message.
         return new XElement("Target", new XAttribute("Name", Path.GetFileName(project.FilePath) ?? project.Name), assemblyElement);
     }
 
-    private static XElement BuildTypeElement(INamedTypeSymbol symbol, TypeDeclarationSyntax syntax, SemanticModel model)
+    private static XElement BuildTypeElement(INamedTypeSymbol symbol, TypeDeclarationSyntax syntax, SemanticModel model, string displayName)
     {
-        var methodElements = new List<XElement>();
+        var memberElements = new List<XElement>();
         var typeAgg = new Aggregate();
-        var coupled = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
+        var hasMethod = false;
 
-        foreach (var methodDecl in syntax.Members.OfType<BaseMethodDeclarationSyntax>())
+        foreach (var member in syntax.Members)
         {
-            if (methodDecl.Body is null && methodDecl.ExpressionBody is null)
+            if (member is FieldDeclarationSyntax fieldDecl)
             {
+                foreach (var variable in fieldDecl.Declaration.Variables)
+                {
+                    if (model.GetDeclaredSymbol(variable) is not IFieldSymbol fieldSymbol)
+                    {
+                        continue;
+                    }
+
+                    var fieldCoupled = MetricsCalculator.ComputeCoupledTypes(model, fieldDecl, symbol);
+                    const int cc = 0;
+                    var executableLines = variable.Initializer is not null ? 1 : 0;
+                    var sourceLines = MetricsCalculator.ComputeSourceLines(fieldDecl);
+                    var mi = MetricsCalculator.ComputeMaintainabilityIndex(fieldDecl, cc, executableLines);
+
+                    memberElements.Add(new XElement("Field",
+                        new XAttribute("Name", $"{fieldSymbol.Type.ToDisplayString(ShortTypeFormat)} {symbol.Name}.{fieldSymbol.Name}"),
+                        new XAttribute("File", syntax.SyntaxTree.FilePath),
+                        new XAttribute("Line", variable.GetLocation().GetLineSpan().StartLinePosition.Line + 1),
+                        new XAttribute("Private", fieldSymbol.DeclaredAccessibility == Accessibility.Private),
+                        new XAttribute("Constant", fieldSymbol.IsConst),
+                        new XElement("Metrics",
+                            Metric("MaintainabilityIndex", mi),
+                            Metric("CyclomaticComplexity", cc),
+                            Metric("ClassCoupling", fieldCoupled.Count),
+                            Metric("SourceLines", sourceLines),
+                            Metric("ExecutableLines", executableLines))));
+
+                    typeAgg.Add(mi, cc, fieldCoupled.Count, sourceLines, executableLines);
+                }
+
                 continue;
             }
 
-            if (model.GetDeclaredSymbol(methodDecl) is not IMethodSymbol methodSymbol)
+            if (member is BaseMethodDeclarationSyntax methodDecl)
             {
-                continue;
+                if (methodDecl.Body is null && methodDecl.ExpressionBody is null)
+                {
+                    continue;
+                }
+
+                if (model.GetDeclaredSymbol(methodDecl) is not IMethodSymbol methodSymbol)
+                {
+                    continue;
+                }
+
+                hasMethod = true;
+                var cc = MetricsCalculator.ComputeCyclomaticComplexity(methodDecl);
+                var executableLines = MetricsCalculator.ComputeExecutableLines(methodDecl);
+                var sourceLines = MetricsCalculator.ComputeSourceLines(methodDecl);
+                var methodCoupled = MetricsCalculator.ComputeCoupledTypes(model, methodDecl, symbol);
+                var mi = MetricsCalculator.ComputeMaintainabilityIndex(methodDecl, cc, executableLines);
+
+                memberElements.Add(new XElement("Method",
+                    new XAttribute("Name", DescribeMethod(methodSymbol, symbol)),
+                    new XAttribute("File", syntax.SyntaxTree.FilePath),
+                    new XAttribute("Line", methodDecl.GetLocation().GetLineSpan().StartLinePosition.Line + 1),
+                    new XAttribute("Private", methodSymbol.DeclaredAccessibility == Accessibility.Private),
+                    new XElement("Metrics",
+                        Metric("MaintainabilityIndex", mi),
+                        Metric("CyclomaticComplexity", cc),
+                        Metric("ClassCoupling", methodCoupled.Count),
+                        Metric("SourceLines", sourceLines),
+                        Metric("ExecutableLines", executableLines))));
+
+                typeAgg.Add(mi, cc, methodCoupled.Count, sourceLines, executableLines);
             }
-
-            var cc = MetricsCalculator.ComputeCyclomaticComplexity(methodDecl);
-            var executableLines = MetricsCalculator.ComputeExecutableLines(methodDecl);
-            var sourceLines = MetricsCalculator.ComputeSourceLines(methodDecl);
-            var methodCoupled = MetricsCalculator.ComputeCoupledTypes(model, methodDecl, symbol);
-            coupled.UnionWith(methodCoupled);
-            var mi = MetricsCalculator.ComputeMaintainabilityIndex(methodDecl, cc, executableLines);
-
-            methodElements.Add(new XElement("Method",
-                new XAttribute("Name", methodSymbol.ToDisplayString()),
-                new XAttribute("File", syntax.SyntaxTree.FilePath),
-                new XAttribute("Line", methodDecl.GetLocation().GetLineSpan().StartLinePosition.Line + 1),
-                new XAttribute("Private", methodSymbol.DeclaredAccessibility == Accessibility.Private),
-                new XElement("Metrics",
-                    Metric("MaintainabilityIndex", mi),
-                    Metric("CyclomaticComplexity", cc),
-                    Metric("ClassCoupling", methodCoupled.Count),
-                    Metric("SourceLines", sourceLines),
-                    Metric("ExecutableLines", executableLines))));
-
-            typeAgg.Add(mi, cc, methodCoupled.Count, sourceLines, executableLines);
         }
 
+        // Computed once over the whole type (not unioned from per-member scans) so that
+        // attributes and the base-type list -- which no single member's syntax covers -- count too.
+        var coupled = MetricsCalculator.ComputeCoupledTypes(model, syntax, symbol);
+        var projectCoupled = coupled
+            .Where(t => t.DeclaringSyntaxReferences.Length > 0)
+            .OrderBy(t => t.ToDisplayString(), StringComparer.Ordinal)
+            .ToList();
+
         var typeSourceLines = MetricsCalculator.ComputeSourceLines(syntax);
-        var typeExecutableLines = typeAgg.ExecutableLines;
-        var typeCc = typeAgg.CyclomaticComplexity;
+        // A type with no methods (a plain data holder) reports a fixed CC/ExecutableLines
+        // baseline instead of summing its fields' own metrics.
+        var typeExecutableLines = hasMethod ? typeAgg.ExecutableLines : 2;
+        var typeCc = hasMethod ? typeAgg.CyclomaticComplexity : 1;
         var typeMi = MetricsCalculator.ComputeMaintainabilityIndex(syntax, typeCc, typeExecutableLines);
         var depthOfInheritance = MetricsCalculator.ComputeDepthOfInheritance(symbol);
 
         return new XElement("NamedType",
-            new XAttribute("Name", symbol.Name),
+            new XAttribute("Name", displayName),
             new XAttribute("File", syntax.SyntaxTree.FilePath),
             new XAttribute("Line", syntax.Identifier.GetLocation().GetLineSpan().StartLinePosition.Line + 1),
             new XElement("Metrics",
@@ -299,11 +364,94 @@ Display this help message.
                 Metric("ClassCoupling", coupled.Count),
                 Metric("DepthOfInheritance", depthOfInheritance),
                 Metric("LackOfCohesionOfMethods", "NaN"),
-                Metric("ProjectClassCoupling", coupled.Count),
-                Metric("ProjectClassCouplingList", "?"),
+                Metric("ProjectClassCoupling", projectCoupled.Count),
+                Metric("ProjectClassCouplingList", string.Join("%", projectCoupled.Select(t => t.ToDisplayString()))),
                 Metric("SourceLines", typeSourceLines),
                 Metric("ExecutableLines", typeExecutableLines)),
-            new XElement("Members", methodElements));
+            new XElement("Members", memberElements));
+    }
+
+    private static XElement BuildEnumElement(INamedTypeSymbol symbol, EnumDeclarationSyntax syntax, SemanticModel model, string displayName)
+    {
+        var memberElements = new List<XElement>();
+
+        foreach (var member in syntax.Members)
+        {
+            if (model.GetDeclaredSymbol(member) is not IFieldSymbol fieldSymbol)
+            {
+                continue;
+            }
+
+            const int cc = 0;
+            var executableLines = member.EqualsValue is not null ? 1 : 0;
+            var sourceLines = MetricsCalculator.ComputeSourceLines(member);
+            var memberCoupled = MetricsCalculator.ComputeCoupledTypes(model, member, symbol);
+            var mi = MetricsCalculator.ComputeMaintainabilityIndex(member, cc, executableLines);
+
+            memberElements.Add(new XElement("Field",
+                new XAttribute("Name", $"{displayName}.{fieldSymbol.Name}"),
+                new XAttribute("File", syntax.SyntaxTree.FilePath),
+                new XAttribute("Line", member.GetLocation().GetLineSpan().StartLinePosition.Line + 1),
+                new XAttribute("Private", fieldSymbol.DeclaredAccessibility == Accessibility.Private),
+                new XAttribute("Constant", true),
+                new XElement("Metrics",
+                    Metric("MaintainabilityIndex", mi),
+                    Metric("CyclomaticComplexity", cc),
+                    Metric("ClassCoupling", memberCoupled.Count),
+                    Metric("SourceLines", sourceLines),
+                    Metric("ExecutableLines", executableLines))));
+        }
+
+        var coupled = MetricsCalculator.ComputeCoupledTypes(model, syntax, symbol);
+        var projectCoupled = coupled
+            .Where(t => t.DeclaringSyntaxReferences.Length > 0)
+            .OrderBy(t => t.ToDisplayString(), StringComparer.Ordinal)
+            .ToList();
+
+        var typeSourceLines = MetricsCalculator.ComputeSourceLines(syntax);
+        const int typeExecutableLines = 2;
+        const int typeCc = 1;
+        var typeMi = MetricsCalculator.ComputeMaintainabilityIndex(syntax, typeCc, typeExecutableLines);
+
+        return new XElement("NamedType",
+            new XAttribute("Name", displayName),
+            new XAttribute("File", syntax.SyntaxTree.FilePath),
+            new XAttribute("Line", syntax.Identifier.GetLocation().GetLineSpan().StartLinePosition.Line + 1),
+            new XElement("Metrics",
+                Metric("MaintainabilityIndex", typeMi),
+                Metric("CyclomaticComplexity", typeCc),
+                Metric("ClassCoupling", coupled.Count),
+                Metric("DepthOfInheritance", 1),
+                Metric("LackOfCohesionOfMethods", "NaN"),
+                Metric("ProjectClassCoupling", projectCoupled.Count),
+                Metric("ProjectClassCouplingList", string.Join("%", projectCoupled.Select(t => t.ToDisplayString()))),
+                Metric("SourceLines", typeSourceLines),
+                Metric("ExecutableLines", typeExecutableLines)),
+            new XElement("Members", memberElements));
+    }
+
+    private static string DescribeMethod(IMethodSymbol method, INamedTypeSymbol containingType)
+    {
+        var parameters = string.Join(", ", method.Parameters.Select(FormatParameter));
+        if (method.MethodKind == MethodKind.Constructor)
+        {
+            return $"{containingType.Name}.{containingType.Name}({parameters})";
+        }
+
+        return $"{method.ReturnType.ToDisplayString(ShortTypeFormat)} {containingType.Name}.{method.Name}({parameters})";
+    }
+
+    private static string FormatParameter(IParameterSymbol parameter)
+    {
+        var modifier = parameter.RefKind switch
+        {
+            RefKind.Out => "out ",
+            RefKind.Ref => "ref ",
+            RefKind.In => "in ",
+            _ => "",
+        };
+        var paramsPrefix = parameter.IsParams ? "params " : "";
+        return $"{modifier}{paramsPrefix}{parameter.Type.ToDisplayString(ShortTypeFormat)} {parameter.Name}";
     }
 
     private static XElement BuildMetricsElement(Aggregate agg) => new(
