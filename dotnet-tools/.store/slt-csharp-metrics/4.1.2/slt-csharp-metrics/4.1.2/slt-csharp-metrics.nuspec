@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>slt-csharp-metrics</id>
+    <version>4.1.2</version>
+    <authors>Microsoft</authors>
+    <owners></owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <icon>Icon.png</icon>
+    <description>Package Description</description>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <serviceable>true</serviceable>
+    <packageTypes>
+      <packageType name="DotnetTool" />
+    </packageTypes>
+    <repository type="git" url="ssh://gitlab@gitlab.csg.apple.com/pa_linder/roslyn-analyzers.git" commit="bba690a8532ef07f49eeda509f35b8a290014d45" />
+    <contentFiles>
+      <files include="any/net8.0/EULA.txt" buildAction="Content" />
+      <files include="any/net8.0/ThirdPartyNotices.txt" buildAction="Content" />
+    </contentFiles>
+  </metadata>
+</package>
