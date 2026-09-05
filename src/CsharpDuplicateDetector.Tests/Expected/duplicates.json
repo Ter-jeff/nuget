@@ -1,0 +1,194 @@
+[
+  [
+    {
+      "FileName": "CommonLib\\Extension\\EpplusExtensions.cs",
+      "ClassName": "EpplusExtensions",
+      "MethodName": "AddSheet",
+      "LineNumber": 131,
+      "NumTokens": 103
+    },
+    {
+      "FileName": "CommonLib\\Extension\\EpplusExtensions.cs",
+      "ClassName": "EpplusExtensions",
+      "MethodName": "AddSheet",
+      "LineNumber": 166,
+      "NumTokens": 101
+    }
+  ],
+  [
+    {
+      "FileName": "CommonLib\\Extension\\EpplusExtensions.cs",
+      "ClassName": "EpplusExtensions",
+      "MethodName": "GetHeaderOrder",
+      "LineNumber": 391,
+      "NumTokens": 140
+    },
+    {
+      "FileName": "CommonLib\\Utility\\EpplusOperation.cs",
+      "ClassName": "EpplusOperation",
+      "MethodName": "GetHeaderOrder",
+      "LineNumber": 36,
+      "NumTokens": 139
+    }
+  ],
+  [
+    {
+      "FileName": "CommonLib\\Extension\\InteropExcelExtensions.cs",
+      "ClassName": "InteropExcelExtensions",
+      "MethodName": "ExportTxt",
+      "LineNumber": 104,
+      "NumTokens": 304
+    },
+    {
+      "FileName": "CommonLib\\Utility\\InteropExcel.cs",
+      "ClassName": "InteropExcelExtensions",
+      "MethodName": "ExportTxt",
+      "LineNumber": 546,
+      "NumTokens": 310
+    }
+  ],
+  [
+    {
+      "FileName": "CommonLib\\Extension\\InteropExcelExtensions.cs",
+      "ClassName": "InteropExcelExtensions",
+      "MethodName": "GetColumnIndexByHeader",
+      "LineNumber": 157,
+      "NumTokens": 280
+    },
+    {
+      "FileName": "CommonLib\\Utility\\InteropExcel.cs",
+      "ClassName": "InteropExcelExtensions",
+      "MethodName": "GetColumnIndexByHeader",
+      "LineNumber": 396,
+      "NumTokens": 280
+    }
+  ],
+  [
+    {
+      "FileName": "CommonLib\\Extension\\InteropExcelExtensions.cs",
+      "ClassName": "InteropExcelExtensions",
+      "MethodName": "LoadFromCollection",
+      "LineNumber": 208,
+      "NumTokens": 641
+    },
+    {
+      "FileName": "CommonLib\\Utility\\InteropExcel.cs",
+      "ClassName": "InteropExcelExtensions",
+      "MethodName": "LoadFromCollection",
+      "LineNumber": 641,
+      "NumTokens": 609
+    }
+  ],
+  [
+    {
+      "FileName": "CommonLib\\Extension\\UnitExtensions.cs",
+      "ClassName": "UnitExtensions",
+      "MethodName": "TryConvertToVolt",
+      "LineNumber": 86,
+      "NumTokens": 198
+    },
+    {
+      "FileName": "CommonLib\\Extension\\UnitExtensions.cs",
+      "ClassName": "UnitExtensions",
+      "MethodName": "TryToConvertToAmpere",
+      "LineNumber": 121,
+      "NumTokens": 234
+    }
+  ],
+  [
+    {
+      "FileName": "CommonLib\\Extension\\UnitExtensions.cs",
+      "ClassName": "UnitExtensions",
+      "MethodName": "TryCombineUnit",
+      "LineNumber": 160,
+      "NumTokens": 176
+    },
+    {
+      "FileName": "CommonLib\\Extension\\UnitExtensions.cs",
+      "ClassName": "UnitExtensions",
+      "MethodName": "TryCombineVolt",
+      "LineNumber": 191,
+      "NumTokens": 147
+    }
+  ],
+  [
+    {
+      "FileName": "CommonLib\\Extension\\UnitExtensions.cs",
+      "ClassName": "UnitExtensions",
+      "MethodName": "ConvertNumber",
+      "LineNumber": 302,
+      "NumTokens": 326
+    },
+    {
+      "FileName": "CommonLib\\Extension\\UnitExtensions.cs",
+      "ClassName": "UnitExtensions",
+      "MethodName": "ConvertNumberFixedPoint",
+      "LineNumber": 350,
+      "NumTokens": 315
+    }
+  ],
+  [
+    {
+      "FileName": "CommonLib\\ResponseManager\\Response.cs",
+      "ClassName": "Response",
+      "MethodName": "WriteMessage",
+      "LineNumber": 16,
+      "NumTokens": 261
+    },
+    {
+      "FileName": "CommonLib\\ResponseManager\\Response.cs",
+      "ClassName": "Response",
+      "MethodName": "Report",
+      "LineNumber": 80,
+      "NumTokens": 284
+    }
+  ],
+  [
+    {
+      "FileName": "CommonLib\\Utility\\ComCombine.cs",
+      "ClassName": "ComCombine",
+      "MethodName": "CombineEnableWord",
+      "LineNumber": 35,
+      "NumTokens": 144
+    },
+    {
+      "FileName": "CommonLib\\Utility\\ComCombine.cs",
+      "ClassName": "ComCombine",
+      "MethodName": "CombineEnableWordByOr",
+      "LineNumber": 69,
+      "NumTokens": 144
+    }
+  ],
+  [
+    {
+      "FileName": "CommonLib\\Utility\\EpplusOperation.cs",
+      "ClassName": "EpplusOperation",
+      "MethodName": "GetCellValue",
+      "LineNumber": 165,
+      "NumTokens": 115
+    },
+    {
+      "FileName": "CommonLib\\Utility\\EpplusOperation.cs",
+      "ClassName": "EpplusOperation",
+      "MethodName": "GetCellValueAutoRate",
+      "LineNumber": 192,
+      "NumTokens": 148
+    }
+  ],
+  [
+    {
+      "FileName": "CommonLib\\Utility\\InteropExcel.cs",
+      "ClassName": "InteropExcel",
+      "MethodName": "PrintExcelColRange",
+      "LineNumber": 72,
+      "NumTokens": 256
+    },
+    {
+      "FileName": "CommonLib\\Utility\\InteropExcel.cs",
+      "ClassName": "InteropExcel",
+      "MethodName": "PrintExcelRowRange",
+      "LineNumber": 109,
+      "NumTokens": 263
+    }
+  ]
+]

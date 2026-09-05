@@ -1,0 +1,13 @@
+File1,Class1,Method1,LineNumber1,File2,Class2,Method2,LineNumber2,JaccardSimilarity,KeyJaccardSimilarity
+CommonLib\Extension\EpplusExtensions.cs,EpplusExtensions,AddSheet,131,CommonLib\Extension\EpplusExtensions.cs,EpplusExtensions,AddSheet,166,0.7586206896551724,0.8717948717948718
+CommonLib\Extension\EpplusExtensions.cs,EpplusExtensions,GetHeaderOrder,391,CommonLib\Utility\EpplusOperation.cs,EpplusOperation,GetHeaderOrder,36,0.9928571428571429,0.9795918367346939
+CommonLib\Extension\InteropExcelExtensions.cs,InteropExcelExtensions,ExportTxt,104,CommonLib\Utility\InteropExcel.cs,InteropExcelExtensions,ExportTxt,546,0.9806451612903225,1
+CommonLib\Extension\InteropExcelExtensions.cs,InteropExcelExtensions,GetColumnIndexByHeader,157,CommonLib\Utility\InteropExcel.cs,InteropExcelExtensions,GetColumnIndexByHeader,396,1,1
+CommonLib\Extension\InteropExcelExtensions.cs,InteropExcelExtensions,LoadFromCollection,208,CommonLib\Utility\InteropExcel.cs,InteropExcelExtensions,LoadFromCollection,641,0.9025875190258752,0.8976377952755905
+CommonLib\Extension\UnitExtensions.cs,UnitExtensions,ConvertNumber,302,CommonLib\Extension\UnitExtensions.cs,UnitExtensions,ConvertNumberFixedPoint,350,0.9077380952380952,0.8292682926829268
+CommonLib\Extension\UnitExtensions.cs,UnitExtensions,TryCombineUnit,160,CommonLib\Extension\UnitExtensions.cs,UnitExtensions,TryCombineVolt,191,0.7845303867403315,0.8775510204081632
+CommonLib\Extension\UnitExtensions.cs,UnitExtensions,TryConvertToVolt,86,CommonLib\Extension\UnitExtensions.cs,UnitExtensions,TryToConvertToAmpere,121,0.8151260504201681,0.8305084745762712
+CommonLib\ResponseManager\Response.cs,Response,WriteMessage,16,CommonLib\ResponseManager\Response.cs,Response,Report,80,0.9122807017543859,0.8666666666666667
+CommonLib\Utility\ComCombine.cs,ComCombine,CombineEnableWord,35,CommonLib\Utility\ComCombine.cs,ComCombine,CombineEnableWordByOr,69,0.9726027397260274,0.8787878787878788
+CommonLib\Utility\EpplusOperation.cs,EpplusOperation,GetCellValue,165,CommonLib\Utility\EpplusOperation.cs,EpplusOperation,GetCellValueAutoRate,192,0.7651006711409396,0.8611111111111112
+CommonLib\Utility\InteropExcel.cs,InteropExcel,PrintExcelColRange,72,CommonLib\Utility\InteropExcel.cs,InteropExcel,PrintExcelRowRange,109,0.9584905660377359,0.9272727272727272

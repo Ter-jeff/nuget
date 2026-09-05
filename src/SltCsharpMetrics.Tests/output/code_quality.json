@@ -1,0 +1,290 @@
+[
+  {
+    "description": "Duplicate method: EpplusExtensions.AddSheet is 75.86% similar to EpplusExtensions.AddSheet in CommonLib\\Extension\\EpplusExtensions.cs:166",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "a7e0f30b7fb7b51f06a4a4db02cc67bb",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Extension\\EpplusExtensions.cs",
+      "lines": {
+        "begin": 131
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: EpplusExtensions.AddSheet is 75.86% similar to EpplusExtensions.AddSheet in CommonLib\\Extension\\EpplusExtensions.cs:131",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "506704a1cb14223f12fe832d65579aa1",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Extension\\EpplusExtensions.cs",
+      "lines": {
+        "begin": 166
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: EpplusExtensions.GetHeaderOrder is 99.29% similar to EpplusOperation.GetHeaderOrder in CommonLib\\Utility\\EpplusOperation.cs:36",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "9404875aa36f4493b5f908b6720b1e5c",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Extension\\EpplusExtensions.cs",
+      "lines": {
+        "begin": 391
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: EpplusOperation.GetHeaderOrder is 99.29% similar to EpplusExtensions.GetHeaderOrder in CommonLib\\Extension\\EpplusExtensions.cs:391",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "d86687e2c77f70b323b6ee7d7af80a69",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Utility\\EpplusOperation.cs",
+      "lines": {
+        "begin": 36
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: InteropExcelExtensions.ExportTxt is 98.06% similar to InteropExcelExtensions.ExportTxt in CommonLib\\Utility\\InteropExcel.cs:546",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "f583187fb9de1966f55354aac2aa10c9",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Extension\\InteropExcelExtensions.cs",
+      "lines": {
+        "begin": 104
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: InteropExcelExtensions.ExportTxt is 98.06% similar to InteropExcelExtensions.ExportTxt in CommonLib\\Extension\\InteropExcelExtensions.cs:104",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "e0f4dc56984d83bc5bf4215ad63b8d6f",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Utility\\InteropExcel.cs",
+      "lines": {
+        "begin": 546
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: InteropExcelExtensions.GetColumnIndexByHeader is 100.00% similar to InteropExcelExtensions.GetColumnIndexByHeader in CommonLib\\Utility\\InteropExcel.cs:396",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "8df93a140645215461877f0736711e27",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Extension\\InteropExcelExtensions.cs",
+      "lines": {
+        "begin": 157
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: InteropExcelExtensions.GetColumnIndexByHeader is 100.00% similar to InteropExcelExtensions.GetColumnIndexByHeader in CommonLib\\Extension\\InteropExcelExtensions.cs:157",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "3dd7248d47eed57a60e152346f1411f7",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Utility\\InteropExcel.cs",
+      "lines": {
+        "begin": 396
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: InteropExcelExtensions.LoadFromCollection is 90.26% similar to InteropExcelExtensions.LoadFromCollection in CommonLib\\Utility\\InteropExcel.cs:641",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "44eb9cd61f19c7e5713a9e51bf2f2ca3",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Extension\\InteropExcelExtensions.cs",
+      "lines": {
+        "begin": 208
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: InteropExcelExtensions.LoadFromCollection is 90.26% similar to InteropExcelExtensions.LoadFromCollection in CommonLib\\Extension\\InteropExcelExtensions.cs:208",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "a75fa1697e358b7f0fa064878a228fd8",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Utility\\InteropExcel.cs",
+      "lines": {
+        "begin": 641
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: UnitExtensions.ConvertNumber is 90.77% similar to UnitExtensions.ConvertNumberFixedPoint in CommonLib\\Extension\\UnitExtensions.cs:350",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "cec68328af928477f6a8ed268dbd23b4",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Extension\\UnitExtensions.cs",
+      "lines": {
+        "begin": 302
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: UnitExtensions.ConvertNumberFixedPoint is 90.77% similar to UnitExtensions.ConvertNumber in CommonLib\\Extension\\UnitExtensions.cs:302",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "dd844eae661bad78e8e044c6e83268f0",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Extension\\UnitExtensions.cs",
+      "lines": {
+        "begin": 350
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: UnitExtensions.TryCombineUnit is 78.45% similar to UnitExtensions.TryCombineVolt in CommonLib\\Extension\\UnitExtensions.cs:191",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "35b2338d29c26142221c9c316285aecc",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Extension\\UnitExtensions.cs",
+      "lines": {
+        "begin": 160
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: UnitExtensions.TryCombineVolt is 78.45% similar to UnitExtensions.TryCombineUnit in CommonLib\\Extension\\UnitExtensions.cs:160",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "d328bf9f4b81198d818813aa40a25974",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Extension\\UnitExtensions.cs",
+      "lines": {
+        "begin": 191
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: UnitExtensions.TryConvertToVolt is 81.51% similar to UnitExtensions.TryToConvertToAmpere in CommonLib\\Extension\\UnitExtensions.cs:121",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "ca1194da4dd78fca0ed4bb9c42ce886d",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Extension\\UnitExtensions.cs",
+      "lines": {
+        "begin": 86
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: UnitExtensions.TryToConvertToAmpere is 81.51% similar to UnitExtensions.TryConvertToVolt in CommonLib\\Extension\\UnitExtensions.cs:86",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "0bede9eeb3e4d79a4be18ea2967242a4",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Extension\\UnitExtensions.cs",
+      "lines": {
+        "begin": 121
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: Response.WriteMessage is 91.23% similar to Response.Report in CommonLib\\ResponseManager\\Response.cs:80",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "3c1ea1a9d2d3f07d0ef3839fad5b6cf7",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\ResponseManager\\Response.cs",
+      "lines": {
+        "begin": 16
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: Response.Report is 91.23% similar to Response.WriteMessage in CommonLib\\ResponseManager\\Response.cs:16",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "5f8f7a263f2544933d4ce89967e3b44f",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\ResponseManager\\Response.cs",
+      "lines": {
+        "begin": 80
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: ComCombine.CombineEnableWord is 97.26% similar to ComCombine.CombineEnableWordByOr in CommonLib\\Utility\\ComCombine.cs:69",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "ac772a32a2fc4a0df121eedeaac34113",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Utility\\ComCombine.cs",
+      "lines": {
+        "begin": 35
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: ComCombine.CombineEnableWordByOr is 97.26% similar to ComCombine.CombineEnableWord in CommonLib\\Utility\\ComCombine.cs:35",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "01c7055517d5b3d89ff3555454cd663c",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Utility\\ComCombine.cs",
+      "lines": {
+        "begin": 69
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: EpplusOperation.GetCellValue is 76.51% similar to EpplusOperation.GetCellValueAutoRate in CommonLib\\Utility\\EpplusOperation.cs:192",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "390e6711133a227a7d68c985856df5f8",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Utility\\EpplusOperation.cs",
+      "lines": {
+        "begin": 165
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: EpplusOperation.GetCellValueAutoRate is 76.51% similar to EpplusOperation.GetCellValue in CommonLib\\Utility\\EpplusOperation.cs:165",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "c91394ce073bc0782e6854330a9b9648",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Utility\\EpplusOperation.cs",
+      "lines": {
+        "begin": 192
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: InteropExcel.PrintExcelColRange is 95.85% similar to InteropExcel.PrintExcelRowRange in CommonLib\\Utility\\InteropExcel.cs:109",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "e6d3fb07c0ad8590e741a831a5b5ea05",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Utility\\InteropExcel.cs",
+      "lines": {
+        "begin": 72
+      }
+    }
+  },
+  {
+    "description": "Duplicate method: InteropExcel.PrintExcelRowRange is 95.85% similar to InteropExcel.PrintExcelColRange in CommonLib\\Utility\\InteropExcel.cs:72",
+    "check_name": "slt-metrics-duplicate-method",
+    "fingerprint": "e12f4db8dfba679983d9f7c3bedfdf89",
+    "severity": "minor",
+    "location": {
+      "path": "CommonLib\\Utility\\InteropExcel.cs",
+      "lines": {
+        "begin": 109
+      }
+    }
+  }
+]

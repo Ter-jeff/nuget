@@ -23,10 +23,10 @@ public class CommandLineTests
     [TestCleanup]
     public void TestCleanup()
     {
-        if (Directory.Exists(_outputDirectory))
-        {
-            Directory.Delete(_outputDirectory, recursive: true);
-        }
+        //if (Directory.Exists(_outputDirectory))
+        //{
+        //    Directory.Delete(_outputDirectory, recursive: true);
+        //}
     }
 
     [TestMethod]

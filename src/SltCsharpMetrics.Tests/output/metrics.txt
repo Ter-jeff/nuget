@@ -1,0 +1,8 @@
+todos 0
+not_implemented_exceptions 0
+duplicate_methods_percent 3.42
+maintainability 82
+depth_of_inhertance_max 4
+cyclomatic_complexity_max 24
+class_coupling_max 16
+class_cohesion_min 100.0
