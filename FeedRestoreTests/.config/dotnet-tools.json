@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "csharp-duplicate-detector": {
+      "version": "1.0.0",
+      "commands": [
+        "csharp-duplicate-detector"
+      ]
+    },
+    "slt-csharp-metrics": {
+      "version": "1.0.0",
+      "commands": [
+        "slt-csharp-metrics"
+      ]
+    }
+  }
+}
