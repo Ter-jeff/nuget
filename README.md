@@ -44,7 +44,7 @@ Only needs to be done once; rotate the PAT there whenever it expires.
 nuget.org — they're built from source in [`src/`](src), packed locally, and
 committed to `feed/` like everything else. See [`src/README.md`](src/README.md)
 for what they are and how they were validated against the originals.
-[`FeedRestoreTests/`](FeedRestoreTests) integration-tests that both actually
+[`src/FeedRestoreTests/`](src/FeedRestoreTests) integration-tests that both actually
 restore and run as `dotnet tool`s.
 
 ## Note on build tools
