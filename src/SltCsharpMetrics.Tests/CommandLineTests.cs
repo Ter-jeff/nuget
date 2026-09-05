@@ -10,12 +10,14 @@ public class CommandLineTests
 
     private string _outputDirectory = null!;
     private string _outputPath = null!;
+    private string _expectedDirectory = null!;
 
     [TestInitialize]
     public void TestInitialize()
     {
         _outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "SltCsharpMetricsTests");
         _outputPath = Path.Combine(_outputDirectory, "metrics.xml");
+        _expectedDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Expected");
         Directory.CreateDirectory(_outputDirectory);
     }
 
@@ -76,5 +78,9 @@ public class CommandLineTests
             Assert.IsTrue(metrics.Any(m => (string)m.Attribute("Name")! == "MaintainabilityIndex"));
             Assert.IsTrue(metrics.Any(m => (string)m.Attribute("Name")! == "CyclomaticComplexity"));
         }
+
+        var expectedPath = Path.Combine(_expectedDirectory, "metrics.xml");
+        Assert.IsTrue(File.Exists(expectedPath), $"Expected metrics.xml fixture not found: {expectedPath}");
+        Assert.AreEqual(File.ReadAllText(expectedPath), File.ReadAllText(_outputPath));
     }
 }

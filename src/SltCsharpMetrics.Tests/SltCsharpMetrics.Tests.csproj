@@ -17,11 +17,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="Input\**\*.*" />
 		<Content Include="Input\**\*.*">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<None Remove="Expected\**\*.*" />
 		<Content Include="Expected\**\*.*">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
