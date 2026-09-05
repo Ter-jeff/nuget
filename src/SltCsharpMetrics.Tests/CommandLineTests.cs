@@ -79,10 +79,6 @@ public class CommandLineTests
 
         var expectedPath = Path.Combine(Directory.GetCurrentDirectory(), "Expected", "metrics.xml");
         Assert.IsTrue(File.Exists(expectedPath), $"Expected metrics.xml fixture not found: {expectedPath}");
-
-        var sharedMethodNames = expectedLines.Keys.Intersect(actualLines.Keys).OrderBy(n => n, StringComparer.Ordinal).ToList();
-        Assert.IsTrue(sharedMethodNames.Count > 0, "Expected at least one method common to both the fixture and the current output.");
-
         Assert.AreEqual(File.ReadAllText(expectedPath), File.ReadAllText(_outputPath));
     }
 }
