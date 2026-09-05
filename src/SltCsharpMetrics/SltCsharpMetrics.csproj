@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>SltCsharpMetrics</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>slt-csharp-metrics</ToolCommandName>
+    <PackageId>slt-csharp-metrics</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Ter-jeff</Authors>
+    <Description>
+      Roslyn-based C# code metrics CLI. Clean-room reimplementation of the
+      slt-csharp-metrics CLI contract (/project, /solution, /out, /quiet,
+      /help) producing a CodeMetricsReport XML with MaintainabilityIndex,
+      CyclomaticComplexity, ClassCoupling, DepthOfInheritance, SourceLines
+      and ExecutableLines per assembly/namespace/type/method.
+    </Description>
+    <PackageType>DotnetTool</PackageType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.7.8" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.11.0" />
+  </ItemGroup>
+
+</Project>

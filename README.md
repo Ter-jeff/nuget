@@ -38,6 +38,13 @@ is every package we mirror, since we're republishing other projects'
 
 Only needs to be done once; rotate the PAT there whenever it expires.
 
+## Custom tool packages
+
+`csharp-duplicate-detector` and `slt-csharp-metrics` aren't mirrored from
+nuget.org — they're built from source in [`src/`](src), packed locally, and
+committed to `feed/` like everything else. See [`src/README.md`](src/README.md)
+for what they are and how they were validated against the originals.
+
 ## Note on build tools
 
 Not everything a project needs has to go through this feed. Build-time tools
