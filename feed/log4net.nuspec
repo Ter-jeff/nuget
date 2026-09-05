@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>log4net</id>
+    <version>1.2.11</version>
+    <title>Apache log4net</title>
+    <authors>The Apache Software Foundation</authors>
+    <license type="expression">Apache-2.0</license>
+    <licenseUrl>https://licenses.nuget.org/Apache-2.0</licenseUrl>
+    <readme>README.md</readme>
+    <projectUrl>https://logging.apache.org/log4net/</projectUrl>
+    <description>The Apache Software Foundation log4net Logging Framework built from svn revision
+      1179523 of https://svn.apache.org/repos/asf/logging/log4net/tags/1.2.11RC1</description>
+    <copyright>Copyright © 2004 - 2011 The Apache Software Foundation</copyright>
+    <tags>logging log tracing logfiles</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework4.8" />
+      <group targetFramework=".NETStandard2.0" />
+    </dependencies>
+  </metadata>
+</package>
