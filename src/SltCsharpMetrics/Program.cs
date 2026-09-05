@@ -91,8 +91,7 @@ Display this help message.
                 MSBuildLocator.RegisterDefaults();
             }
 
-            var lackOfCohesionValues = new Dictionary<ISymbol, double>(SymbolEqualityComparer.Default);
-            var metricDatas = await ComputeMetricDatasAsync(projects, solutions, quiet, lackOfCohesionValues);
+            var metricDatas = await ComputeMetricDatasAsync(projects, solutions, quiet);
 
             if (!quiet)
             {
@@ -101,7 +100,7 @@ Display this help message.
 
             using (var writer = new XmlTextWriter(outPath, Encoding.UTF8))
             {
-                MetricsOutputWriter.WriteMetricFile(metricDatas, writer, lackOfCohesionValues);
+                MetricsOutputWriter.WriteMetricFile(metricDatas, writer);
             }
 
             if (!quiet)
@@ -144,7 +143,7 @@ Display this help message.
     // CodeAnalysisMetricData for each project (whether named directly or
     // discovered via a solution), keyed by that project's own file path.
     private static async Task<ImmutableArray<(string, CodeAnalysisMetricData)>> ComputeMetricDatasAsync(
-        List<string> projectPaths, List<string> solutionPaths, bool quiet, Dictionary<ISymbol, double> lackOfCohesionValues)
+        List<string> projectPaths, List<string> solutionPaths, bool quiet)
     {
         var builder = ImmutableArray.CreateBuilder<(string, CodeAnalysisMetricData)>();
         using var workspace = MSBuildWorkspace.Create();
@@ -158,7 +157,7 @@ Display this help message.
             }
 
             var project = await workspace.OpenProjectAsync(path);
-            await AddProjectMetricDataAsync(project, quiet, builder, lackOfCohesionValues);
+            await AddProjectMetricDataAsync(project, quiet, builder);
         }
 
         foreach (var path in solutionPaths)
@@ -171,7 +170,7 @@ Display this help message.
             var solution = await workspace.OpenSolutionAsync(path);
             foreach (var project in solution.Projects)
             {
-                await AddProjectMetricDataAsync(project, quiet, builder, lackOfCohesionValues);
+                await AddProjectMetricDataAsync(project, quiet, builder);
             }
         }
 
@@ -181,8 +180,7 @@ Display this help message.
     private static async Task AddProjectMetricDataAsync(
         Project project,
         bool quiet,
-        ImmutableArray<(string, CodeAnalysisMetricData)>.Builder builder,
-        Dictionary<ISymbol, double> lackOfCohesionValues)
+        ImmutableArray<(string, CodeAnalysisMetricData)>.Builder builder)
     {
         if (!quiet)
         {
@@ -194,21 +192,5 @@ Display this help message.
         var data = await CodeAnalysisMetricData.ComputeAsync(
             compilation.Assembly, new CodeMetricsAnalysisContext(compilation, CancellationToken.None));
         builder.Add((project.FilePath!, data));
-
-        CollectLackOfCohesionValues(data, compilation, lackOfCohesionValues);
-    }
-
-    private static void CollectLackOfCohesionValues(
-        CodeAnalysisMetricData data, Compilation compilation, Dictionary<ISymbol, double> lackOfCohesionValues)
-    {
-        if (data.Symbol is INamedTypeSymbol namedType && !lackOfCohesionValues.ContainsKey(namedType))
-        {
-            lackOfCohesionValues[namedType] = LackOfCohesionCalculator.Calculate(namedType, compilation);
-        }
-
-        foreach (var child in data.Children)
-        {
-            CollectLackOfCohesionValues(child, compilation, lackOfCohesionValues);
-        }
     }
 }

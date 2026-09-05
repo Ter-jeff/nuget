@@ -25,9 +25,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Build.Locator" Version="1.7.8" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
-		<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.11.0" />
-		<PackageReference Include="Microsoft.CodeAnalysis.AnalyzerUtilities" Version="4.14.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.1" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.0.1" />
 	</ItemGroup>
 
 </Project>

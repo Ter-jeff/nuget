@@ -25,10 +25,4 @@
 		</Content>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Reference Include="Metrics">
-	    <HintPath>..\..\..\TrainingProgram\.devops\dotnet-tools\.store\slt-csharp-metrics\4.1.2\slt-csharp-metrics\4.1.2\tools\net8.0\any\Metrics.dll</HintPath>
-	  </Reference>
-	</ItemGroup>
-
 </Project>

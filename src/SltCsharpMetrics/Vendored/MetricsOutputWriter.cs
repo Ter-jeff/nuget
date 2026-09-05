@@ -4,14 +4,10 @@
 // TrainingProgram/.devops/dotnet-tools, and adapted for use here.
 // See Vendored/README.md.
 
-using System;
 using System.Collections.Immutable;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml;
-using Analyzer.Utilities.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeMetrics;
 
@@ -23,8 +19,7 @@ internal static class MetricsOutputWriter
 
 	public static void WriteMetricFile(
 		ImmutableArray<(string, CodeAnalysisMetricData)> data,
-		XmlTextWriter writer,
-		IReadOnlyDictionary<ISymbol, double>? lackOfCohesionValues = null)
+		XmlTextWriter writer)
 	{
 		XmlTextWriter writer2 = writer;
 		writer2.Formatting = Formatting.Indented;
@@ -44,13 +39,13 @@ internal static class MetricsOutputWriter
 				var (path, data2) = enumerator.Current;
 				writer2.WriteStartElement("Target");
 				writer2.WriteAttributeString("Name", Path.GetFileName(path));
-				WriteMetricData(data2, writer2, lackOfCohesionValues);
+				WriteMetricData(data2, writer2);
 				writer2.WriteEndElement();
 			}
 		}
 	}
 
-	private static void WriteMetricData(CodeAnalysisMetricData data, XmlTextWriter writer, IReadOnlyDictionary<ISymbol, double>? lackOfCohesionValues)
+	private static void WriteMetricData(CodeAnalysisMetricData data, XmlTextWriter writer)
 	{
 		XmlTextWriter writer2 = writer;
 		CodeAnalysisMetricData data2 = data;
@@ -89,7 +84,7 @@ internal static class MetricsOutputWriter
 				ImmutableArray<CodeAnalysisMetricData>.Enumerator enumerator = data2.Children.GetEnumerator();
 				while (enumerator.MoveNext())
 				{
-					WriteMetricData(enumerator.Current, writer2, lackOfCohesionValues);
+					WriteMetricData(enumerator.Current, writer2);
 				}
 				if (flag)
 				{
@@ -149,13 +144,10 @@ internal static class MetricsOutputWriter
 			}
 			if (data2.Symbol.Kind == SymbolKind.NamedType)
 			{
-				// The AnalyzerUtilities package version available here doesn't expose
-				// LackOfCohesionOfMethods publicly, so it's computed separately (see
-				// LackOfCohesionCalculator) and passed in for lookup here.
-				var lcom = lackOfCohesionValues is not null && lackOfCohesionValues.TryGetValue(data2.Symbol, out var value)
-					? value
-					: double.NaN;
-				WriteMetric("LackOfCohesionOfMethods", double.IsNaN(lcom) ? "NaN" : lcom.ToString("0.##"), writer2);
+				if (data2.LackOfCohesionOfMethods.HasValue)
+				{
+					WriteMetric("LackOfCohesionOfMethods", data2.LackOfCohesionOfMethods.Value.ToString("0.##"), writer2);
+				}
 				string[] array = (from namedType in data2.CoupledNamedTypes
 					where !namedType.IsStatic && namedType.TypeKind != TypeKind.Enum
 					select namedType.ToDisplayString() into typeName
