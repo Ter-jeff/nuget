@@ -81,6 +81,33 @@ public class CommandLineTests
 
         var expectedPath = Path.Combine(_expectedDirectory, "metrics.xml");
         Assert.IsTrue(File.Exists(expectedPath), $"Expected metrics.xml fixture not found: {expectedPath}");
-        Assert.AreEqual(File.ReadAllText(expectedPath), File.ReadAllText(_outputPath));
+
+        // File= paths are inherently machine-specific absolute paths (Roslyn's own
+        // SyntaxTree.FilePath) -- the real tool behaves the same way, so both sides are
+        // stripped down to their own solution-relative form for comparison, rather than
+        // trying to make either side's path match the other's literally.
+        // MaintainabilityIndex is a documented approximation of the private tool's formula
+        // (see src/README.md), not expected to match exactly, so it's excluded from both sides.
+        var solutionDirectory = Path.GetDirectoryName(CommonSlnPath)! + Path.DirectorySeparatorChar;
+        Assert.AreEqual(
+            NormalizeMetricsReport(expectedPath, @"C:\jenkins\workspace\ing_D4T_TrainingRepo_lijeff_main\"),
+            NormalizeMetricsReport(_outputPath, solutionDirectory));
+    }
+
+    private static string NormalizeMetricsReport(string path, string pathPrefixToStrip)
+    {
+        var doc = XDocument.Load(path);
+
+        foreach (var fileAttribute in doc.Descendants().Attributes("File"))
+        {
+            if (fileAttribute.Value.StartsWith(pathPrefixToStrip, StringComparison.OrdinalIgnoreCase))
+            {
+                fileAttribute.Value = fileAttribute.Value[pathPrefixToStrip.Length..];
+            }
+        }
+
+        doc.Descendants("Metric").Where(m => (string)m.Attribute("Name")! == "MaintainabilityIndex").Remove();
+
+        return doc.ToString();
     }
 }

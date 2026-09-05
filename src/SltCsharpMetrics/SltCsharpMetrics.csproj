@@ -13,11 +13,11 @@
 		<Version>1.0.0</Version>
 		<Authors>Ter-jeff</Authors>
 		<Description>
-			Roslyn-based C# code metrics CLI. Clean-room reimplementation of the
-			slt-csharp-metrics CLI contract (/project, /solution, /out, /quiet,
-			/help) producing a CodeMetricsReport XML with MaintainabilityIndex,
-			CyclomaticComplexity, ClassCoupling, DepthOfInheritance, SourceLines
-			and ExecutableLines per assembly/namespace/type/method.
+			Roslyn-based C# code metrics CLI matching the slt-csharp-metrics CLI
+			contract (/project, /solution, /out, /quiet, /help). The metrics
+			computation itself vendors Microsoft's MIT-licensed
+			Microsoft.CodeAnalysis.CodeMetrics library (from dotnet/roslyn-analyzers'
+			Metrics tool) rather than reimplementing it -- see Vendored/README.md.
 		</Description>
 		<PackageType>DotnetTool</PackageType>
 		<SatelliteResourceLanguages>es</SatelliteResourceLanguages>
@@ -27,6 +27,7 @@
 		<PackageReference Include="Microsoft.Build.Locator" Version="1.7.8" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.11.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.AnalyzerUtilities" Version="4.14.0" />
 	</ItemGroup>
 
 </Project>
