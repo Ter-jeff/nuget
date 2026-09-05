@@ -6,18 +6,16 @@ namespace SltCsharpMetrics.Tests;
 public class CommandLineTests
 {
     // Real-world solution used as the command-line tool's input for these tests.
-    private const string CommonSlnPath = @"C:\GitHub\TrainingProgram\Common.sln";
+    private const string CommonSlnPath = "/Users/neko0824/Git/test/Common.sln";
 
     private string _outputDirectory = null!;
     private string _outputPath = null!;
-    private string _expectedDirectory = null!;
 
     [TestInitialize]
     public void TestInitialize()
     {
         _outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Output");
         _outputPath = Path.Combine(_outputDirectory, "metrics.xml");
-        _expectedDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Expected");
         Directory.CreateDirectory(_outputDirectory);
     }
 
@@ -79,35 +77,12 @@ public class CommandLineTests
             Assert.IsTrue(metrics.Any(m => (string)m.Attribute("Name")! == "CyclomaticComplexity"));
         }
 
-        var expectedPath = Path.Combine(_expectedDirectory, "metrics.xml");
+        var expectedPath = Path.Combine(Directory.GetCurrentDirectory(), "Expected", "metrics.xml");
         Assert.IsTrue(File.Exists(expectedPath), $"Expected metrics.xml fixture not found: {expectedPath}");
 
-        // File= paths are inherently machine-specific absolute paths (Roslyn's own
-        // SyntaxTree.FilePath) -- the real tool behaves the same way, so both sides are
-        // stripped down to their own solution-relative form for comparison, rather than
-        // trying to make either side's path match the other's literally.
-        // MaintainabilityIndex is a documented approximation of the private tool's formula
-        // (see src/README.md), not expected to match exactly, so it's excluded from both sides.
-        var solutionDirectory = Path.GetDirectoryName(CommonSlnPath)! + Path.DirectorySeparatorChar;
-        Assert.AreEqual(
-            NormalizeMetricsReport(expectedPath, @"C:\jenkins\workspace\ing_D4T_TrainingRepo_lijeff_main\"),
-            NormalizeMetricsReport(_outputPath, solutionDirectory));
-    }
+        var sharedMethodNames = expectedLines.Keys.Intersect(actualLines.Keys).OrderBy(n => n, StringComparer.Ordinal).ToList();
+        Assert.IsTrue(sharedMethodNames.Count > 0, "Expected at least one method common to both the fixture and the current output.");
 
-    private static string NormalizeMetricsReport(string path, string pathPrefixToStrip)
-    {
-        var doc = XDocument.Load(path);
-
-        foreach (var fileAttribute in doc.Descendants().Attributes("File"))
-        {
-            if (fileAttribute.Value.StartsWith(pathPrefixToStrip, StringComparison.OrdinalIgnoreCase))
-            {
-                fileAttribute.Value = fileAttribute.Value[pathPrefixToStrip.Length..];
-            }
-        }
-
-        doc.Descendants("Metric").Where(m => (string)m.Attribute("Name")! == "MaintainabilityIndex").Remove();
-
-        return doc.ToString();
+        Assert.AreEqual(File.ReadAllText(expectedPath), File.ReadAllText(_outputPath));
     }
 }
