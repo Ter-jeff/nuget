@@ -12,5 +12,5 @@
 - Always regenerate via `dotnet test` (in-process `Program.Main`), not the standalone `dotnet-tools\csharp-duplicate-detector.exe` — that prebuilt exe can lag behind the current source of `CsharpDuplicateDetector` and produce mismatched output.
 - To regenerate straight into `Expected` using the standalone exe instead (only after rebuilding/republishing the exe so it matches current source):
   ```
-  dotnet-tools\csharp-duplicate-detector.exe --min-tokens 100 C:\jeff\GitHub\test src\CsharpDuplicateDetector.Tests\Expected
+  dotnet-tools\csharp-duplicate-detector.exe --min-tokens 100 C:\GitHub\test src\CsharpDuplicateDetector.Tests\Expected
   ```
