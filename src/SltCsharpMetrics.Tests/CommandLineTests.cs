@@ -6,7 +6,7 @@ namespace SltCsharpMetrics.Tests;
 public class CommandLineTests
 {
     // Real-world solution used as the command-line tool's input for these tests.
-    private const string CommonSlnPath = @"C:\GitHub\TrainingProgram\Common.sln";
+    private const string CommonSlnPath = @"C:\GitHub\test\Automation.sln";
 
     private string _outputDirectory = null!;
     private string _outputPath = null!;
