@@ -32,5 +32,5 @@
 - To run the standalone exe instead (only after rebuilding/republishing so it matches current source): its args start with `/`, which Git Bash mangles into a path (`/solution:...` gets rewritten and the exe just prints usage) — run this from PowerShell, not Git Bash:
   ```
   $env:GITHUB_PACKAGES_TOKEN = "<token>"
-  nuget\dotnet-tools\slt-csharp-metrics.exe /solution:C:\GitHub\test\Automation.sln /out:src\SltCsharpMetrics.Tests\Expected\metrics.xml /quiet
+  C:\GitHub\nuget\dotnet-tools\slt-csharp-metrics.exe /solution:C:\GitHub\test\Automation.sln /out:C:\GitHub\nuget\src\SltCsharpMetrics.Tests\Expected\metrics.xml /quiet
   ```
